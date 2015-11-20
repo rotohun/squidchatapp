@@ -5,10 +5,8 @@
 	"dependencies":{
 		"socket.io":"*",
 		"express":"*"
-	}
-	{ "scripts" :
-  { 
-  	"start": "node server.js",
-  }
-}
+	},
+	"scripts":{
+    "start": "node server.js"
+		}
 }
