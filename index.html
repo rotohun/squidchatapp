@@ -1,92 +1,132 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 	<head>
-		<title>Squids Chat</title>
+		<title>ChatIO</title>
 		<style>
 			body{
-				background-color: #f9f9f9;
-
+				background:#f9f9f9;
 			}
 
-			.container{
-				width: 700px;
-				margin: 0 auto;
-
+			#container{
+				width:700px;
+				margin:0 auto;
 			}
 
-			.chatwindow{
-				height: 300px;
+			#chatWindow{
+				height:300px;
 			}
 
-			.mainWrapper{
-				display: none;
+			#mainWrapper{
+				display:none;
+				
 			}
 
-			.chatwrapper{
-				float: left;
-				border: 1px #ccc solid;
+			#chatWrapper{
+				float:left;
+				border:1px #ccc solid;
 				border-radius: 10px;
-				background: #f4f4f4;
-				padding: 10px;
+				background:#f4f4f4;
+				padding:10px;
 			}
 
-			#userwrapper{
-				float: left;
-				border: 1px #ccc solid;
+			#userWrapper{
+				float:left;
+				border:1px #ccc solid;
 				border-radius: 10px;
-				background: #f4f4f4;
-				margin-left: 20px;
-				width: 150px;
-				max-height: 200px;
+				background:#f4f4f4;
+				padding:10px;
+				margin-left:20px;
+				width:150px;
+				max-height:200px;
 			}
 
-			.nameswrapper{
-				float: left;
-				border: 1px #ccc solid;
+			#namesWrapper{
+				float:left;
+				border:1px #ccc solid;
 				border-radius: 10px;
-				background: #f4f4f4;
-				padding: 10px;
-				margin-left: 20px;
+				background:#f4f4f4;
+				padding:10px;
+				margin-left:20px;
+				
 			}
 
 			input{
-				height: 30px;
+				height:30px;
 			}
-
 		</style>
 	</head>
 	<body>
-		<div class="container">
-			
-			<div class="nameswrapper">
-				<h2>Squids Chat</h2>
-				<p>Create Username</p>
-				<form id=" usernameform">
-					<input size="35"id="username">	
-					<input type="submit" value="submit">
+		<div id="container">
+			<div id="namesWrapper">
+				<h2>Squids</h2>
+				<p>Create Username:</p>
+				<div id="error"></div>
+				<form id="usernameForm">
+					<input size="35" id="username">
+					<input type="submit" value="Submit">
 				</form>
 			</div>
-			
-			<div class="mainWrapper">
-				<h2>Message</h2>
-				<div class="chatwrapper">
-					<div class="chatwindow"></div>
-					<form id="messageform">
-						<input size="35"id="message" palceholder="Type Something....">	
-						<input type="submit" value="Say it">
+
+			<div id="mainWrapper">
+				<h2>Squid Chat</h2>
+				<div id="chatWrapper">
+					<div id="chatWindow"></div>
+					<form id="messageForm">
+						<input size="35" id="message" placeholder="Type Something...">
+						<input type="submit" value="Say It!">
 					</form>
 				</div>
-				<div class="userwrapper">
-					<div class="users">	
-					</div>
+
+				<div id="userWrapper">
+					<div id="users"></div>
 				</div>
 			</div>
-
-			
-			
-
 		</div>
+		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+			$(function(){
+				var socket = io.connect();
+				var $messageForm = $('#messageForm');
+				var $message = $('#message');
+				var $chat = $('#chatWindow');
+				var $usernameForm = $('#usernameForm');
+				var $users = $('#users');
+				var $username = $('#username');
+				var $error = $('#error');
 
-		
+				$usernameForm.submit(function(e){
+					e.preventDefault();
+					socket.emit('new user', $username.val(), function(data){
+						if(data){
+							$('#namesWrapper').hide();
+							$('#mainWrapper').show();
+						}else{
+							$error.html('username is already taken');
+						}
+					});
+						$username.val('');
+				});
+
+				socket.on('usernames', function(data){
+					var html = '';
+					for (var i = 0; i < data.length; i++){
+						html += data[i] + '<br>';
+					};
+					$users.html(html);
+				})
+
+				$messageForm.submit(function(e){
+					e.preventDefault();
+					socket.emit('send message', $message.val());
+					$message.val('');
+				});
+
+				socket.on('new message', function(data){
+					$chat.append('<strong>'+data.user+'</strong>: '+data.msg+'<br>');
+				});
+			});
+
+		</script>
 	</body>
 </html>
