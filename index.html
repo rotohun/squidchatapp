@@ -4,14 +4,14 @@
 		<meta charset='utf-8'>
 		<meta name=viewport content="width=device-width, initial-scale=1">
 		<title>Squids Chatt</title>
-		<style src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"></style>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
 		<style>
 
 			body{
 				background:#f9f9f9;
 			}
 
-			#container{
+			.container{
 
 				margin:0 auto;
 			}
@@ -25,7 +25,7 @@
 			}
 
 			#chatWrapper{
-				float:left;
+				max-width: 100%;
 				border:1px #ccc solid;
 				border-radius: 10px;
 				background:#f4f4f4;
@@ -34,7 +34,7 @@
 			}
 
 			#userWrapper{
-				float:left;
+
 				border:1px #ccc solid;
 				border-radius: 10px;
 				background:#f4f4f4;
@@ -62,10 +62,29 @@
 			input{
 				height:30px;
 			}
+
+			.text{
+				margin-bottom: 20px;
+				font-size: 2em;
+			}
+
+			.center{
+				margin: 0 auto;
+			}
+
+			/* Smartphones (portrait and landscape) ----------- */
+			@media only screen  
+			and (max-device-width : 700px) {
+				#userWrapper{
+					margin-top: 10px;
+				}
+				
+			}
 		</style>
 	</head>
 	<body>
-		<div id="container">
+		<div class="container">
+
 			<div id="namesWrapper">
 				<h2>Squids</h2>
 				<p>Create Username:</p>
@@ -76,20 +95,24 @@
 				</form>
 			</div>
 
-			<div id="mainWrapper">
-				<h2>Squid Chat</h2>
-				<div id="chatWrapper">
+			<div id="mainWrapper" class="row">
+				<h2 class="text-center text">Squid Chat</h2>
+				<div id="chatWrapper" class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 					<div id="chatWindow"></div>
 					<form id="messageForm">
 						<input size="35" id="message" placeholder="Type Something...">
 						<input type="submit" value="Say It!">
 					</form>
 				</div>
-				<div id="userWrapper">
-					<div id="users"></div>
+				<div id="userWrapper" class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+					<h2 class="text-center">Squids</h2>
+					<hr>
+					<div id="users" class="text-center"></div>
 				</div>
 			</div>
+
 		</div>
+
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
 		<script>
